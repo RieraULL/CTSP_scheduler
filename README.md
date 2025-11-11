@@ -6,24 +6,6 @@
 
 A comprehensive C++ framework to verify a feasible solution and to provide with a scheduling for the **Consistent Traveling Salesman Problems (CTSP)** (arrival time consistency). This project converts CTSP routing solutions into temporal schedules, ensuring that all consistency constraints between multiple depots are satisfied.
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Problem Description](#problem-description)
-- [Project Structure](#project-structure)
-- [Quick Start](#quick-start)
-- [Usage](#usage)
-- [Input/Output Formats](#inputoutput-formats)
-- [Architecture](#architecture)
-- [Dependencies](#dependencies)
-- [Building from Source](#building-from-source)
-- [Documentation](#documentation)
-- [Examples](#examples)
-- [Contributing](#contributing)
-- [License](#license)
-- [Authors](#authors)
-
 ## Overview
 
 The **CTSP Scheduler** is a specialized tool designed to verify a solution for the Consistent Traveling Salesman Problem (CTSP), a variant of the classical TSP where:
@@ -137,11 +119,6 @@ make
 ```
 
 **Output:** A JSON file with temporal schedules for each depot and time windows for each customer.
-
-### Example Instance
-
-The repository includes a sample instance `bayg29_p5_f90_lL`:
-
 
 ## Usage
 
