@@ -98,6 +98,25 @@ CTSP_scheduler/
 
 ### Build and Run (CMake Presets)
 
+**Opción A: Con CLP (Open-Source)**
+
+```bash
+# Clone the repository
+git clone https://github.com/RieraULL/CTSP_scheduler.git
+cd CTSP_scheduler
+
+# Configure (CLP build)
+cmake --preset clp
+
+# Build (CLP)
+cmake --build --preset clp -j
+
+# Run (CLP)
+./build-clp/bin/ctsp_scheduler ctsp2 input/bayg29_p5_f90_lL.contsp input/bayg29_p5_f90_lL.sol output/schedule.json
+```
+
+**Opción B: Con CPLEX (Comercial)**
+
 ```bash
 # Clone the repository
 git clone https://github.com/RieraULL/CTSP_scheduler.git
@@ -114,6 +133,8 @@ cmake --build --preset cplex -j
 ```
 
 **Output:** A JSON file with temporal schedules for each depot and time windows for each customer.
+
+> **Nota**: Para detalles de instalación de dependencias (CLP o CPLEX), consulta [docs/INSTALL.md](docs/INSTALL.md).
 
 ## Instalación
 
