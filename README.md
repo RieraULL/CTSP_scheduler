@@ -45,16 +45,16 @@ The Consistent Traveling Salesman Problem is defined in the following research p
 
 ## Features
 
-✅ **Arrival-time consistency** - Verify and enforce temporal consistency across routes   
-✅ **TSPLIB compatibility** - Read standard TSPLIB instances with CTSP extensions  
-✅ **JSON export** - Structured output for integration with other tools  
-✅ **Comprehensive documentation** - Doxygen comments and detailed READMEs for all modules  
-✅ **Modular architecture** - Clean separation between I/O, modeling, solving, and scheduling  
+✅ **Arrival-time consistency** - Verify and enforce temporal consistency across routes
+✅ **TSPLIB compatibility** - Read standard TSPLIB instances with CTSP extensions
+✅ **JSON export** - Structured output for integration with other tools
+✅ **Comprehensive documentation** - Doxygen comments and detailed READMEs for all modules
+✅ **Modular architecture** - Clean separation between I/O, modeling, solving, and scheduling
 
 
 ## Project Structure
 
-```
+```text
 CTSP_scheduler/
 ├── src/
 │   ├── main/                   # Main scheduler application
@@ -96,29 +96,32 @@ CTSP_scheduler/
 - **C++ compiler** with C++14 support (GCC 5+, Clang 3.4+, MSVC 2015+)
 - **LP Solver**: IBM ILOG CPLEX 22.1 (or CLP for open-source builds if you adapt the code)
 
-### Build and Run
+### Build and Run (CMake Presets)
 
 ```bash
 # Clone the repository
 git clone https://github.com/RieraULL/CTSP_scheduler.git
 cd CTSP_scheduler
 
-# Create build directory
-mkdir build
-cd build
+# Configure (CPLEX build)
+cmake --preset cplex
 
-# Configure with CPLEX path
-# Note: Update the path to match your CPLEX installation
-# Change set (CPX_PATH /home/riera/Dropbox/Privado/Riera-Linux/ibm/ILOG/CPLEX_Studio221) at util project
+# Build (CPLEX)
+cmake --build --preset cplex -j
 
-# Build the project
-make
-
-# Run the scheduler
-./bin/ctsp_scheduler ctsp2 ../input/bayg29_p5_f90_lL.contsp ../input/bayg29_p5_f90_lL.sol ../output/schedule.json
+# Run (CPLEX)
+./build-cplex/bin/ctsp_scheduler ctsp2 input/bayg29_p5_f90_lL.contsp input/bayg29_p5_f90_lL.sol output/schedule.json
 ```
 
 **Output:** A JSON file with temporal schedules for each depot and time windows for each customer.
+
+## Instalación
+
+Consulta la guía completa de instalación en: [docs/INSTALL.md](docs/INSTALL.md)
+
+## Depuración en VS Code (opcional)
+
+Incluimos configuraciones de depuración en `.vscode/launch.json` para ejecutar `ctsp_scheduler` con los mismos argumentos de ejemplo. Hay variantes para ejecutables en `build-cplex` y `build-clp`.
 
 ## Usage
 
@@ -129,6 +132,7 @@ make
 ```
 
 **Arguments:**
+
 - `problem_type`: Problem variant (`"ctsp2"` for multi-depot, `"ctsp1"` for single-depot) (**this version only supports ctsp1**)
 - `instance_file`: Path to CTSP instance in extended TSPLIB format (`.contsp`)
 - `solution_file`: Path to feasible routing solution (`.sol`)
@@ -144,7 +148,7 @@ make
 
 ### Component Overview
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    main (ctsp_scheduler)                     │
 │  Entry point, command-line parsing, workflow orchestration  │
@@ -166,7 +170,7 @@ make
 
 ### Data Flow
 
-```
+```text
 1. Load instance (.contsp)
           ↓
 2. Load solution (.sol)
@@ -243,6 +247,7 @@ firefox docs/html/index.html
 ```
 
 **Input:**
+
 - Instance: 29 nodes (27 customers + 2 depots), 5 days
 - Max time differential: 156 time units
 - Solution: Pre-computed feasible routes
@@ -257,7 +262,7 @@ firefox docs/html/index.html
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-```
+```text
 MIT License
 
 Copyright (c) 2025 Jorge Riera-Ledesma

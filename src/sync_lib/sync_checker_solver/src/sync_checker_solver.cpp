@@ -8,7 +8,11 @@
  */
 
 #include "sync_checker_solver.hpp"
+#ifdef USE_CLP
+#include "CLP/CLP_solver.hpp"
+#else
 #include "CPX_solver.hpp"
+#endif
 
 namespace GOMA
 {
@@ -17,7 +21,11 @@ namespace GOMA
      * Internally instantiates a CPLEX solver with the provided model.
      */
     sync_checker_solver::sync_checker_solver(const model_description &model, const double tol) 
+#ifdef USE_CLP
+        : solver_(new CLP_solver(model, tol))
+#else
         : solver_(new CPX_solver(model, tol))
+#endif
     {
     }
 
@@ -51,7 +59,12 @@ namespace GOMA
             delete solver_;
         }
 
-        solver_ = new CPX_solver(model, tol);
+        
+#ifdef USE_CLP
+    solver_ = new CLP_solver(model, tol);
+#else
+    solver_ = new CPX_solver(model, tol);
+#endif
     }
 
     /**

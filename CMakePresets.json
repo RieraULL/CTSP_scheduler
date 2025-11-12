@@ -1,0 +1,40 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "cplex",
+      "displayName": "CPLEX (Ninja, Debug)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-cplex",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "USE_CLP": "OFF"
+      }
+    },
+    {
+      "name": "clp",
+      "displayName": "CLP (Ninja, Debug)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-clp",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "USE_CLP": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "cplex",
+      "configurePreset": "cplex"
+    },
+    {
+      "name": "clp",
+      "configurePreset": "clp"
+    }
+  ]
+}
