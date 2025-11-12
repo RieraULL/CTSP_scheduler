@@ -8,6 +8,7 @@ namespace SYNC_LIB
 
     ctsp_sync_checker::ctsp_sync_checker(const sync_model_a_builder &builder, const GOMA::model_description &model, const double tol) : sync_checker_solver(model, tol),
                                                                                                                                         tol_(tol),
+                                                                                                                                        precision_(1E3),
                                                                                                                                         n_operations_(builder.get_n_operations()),
                                                                                                                                         n_routing_arcs_(builder.get_n_routing_arcs()),
                                                                                                                                         n_sync_arcs_(builder.get_n_sync_arcs()),
@@ -66,6 +67,7 @@ namespace SYNC_LIB
 
     ctsp_sync_checker::ctsp_sync_checker(void) : sync_checker_solver(),
                                                  tol_(1E-3),
+                                                 precision_(1E3),
                                                  n_operations_(0),
                                                  n_routing_arcs_(0),
                                                  n_sync_arcs_(0),

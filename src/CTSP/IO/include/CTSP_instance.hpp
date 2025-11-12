@@ -74,7 +74,6 @@ namespace CTSP
      * @note All customers share the same time window width in basic version
      */
     class instance: public PTSP::instance
-    class instance: public PTSP::instance
     {
     protected:
         /// Time window width per customer: max_time - min_time ≤ T[i]

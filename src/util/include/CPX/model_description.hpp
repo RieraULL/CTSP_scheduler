@@ -87,7 +87,6 @@ namespace GOMA
      * @note Compatible with CPLEX and CLP solvers through adapter classes
      */
     class model_description
-    class model_description
     {
     public:
         string name_; ///< Model name

@@ -59,9 +59,6 @@ namespace GOMA
     template <class T>
     class matrix
     {
-    template <class T>
-    class matrix
-    {
     private:
         size_t m_; ///< Number of rows
         size_t n_; ///< Number of columns

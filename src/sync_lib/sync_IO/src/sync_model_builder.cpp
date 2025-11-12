@@ -126,7 +126,7 @@ namespace SYNC_LIB
     void sync_model_builder::build_routing_partition(const size_t n_depots, const double max_distance, const GOMA::matrix<double> &distances, const vector<sync_operation> &operations, operations_partition &routing)
     {
         const size_t n_operations{operations.size()};
-        const int n_vertices{distances.get_n_rows()};
+        const size_t n_vertices{distances.get_n_rows()};
 
         vector<operations_subset> routing_subset(n_depots);
 
@@ -148,10 +148,10 @@ namespace SYNC_LIB
 
         // Intra set arcs
 
-        for (int l{0}; l < n_depots; l++)
+        for (size_t l{0}; l < n_depots; l++)
         {
-            const int operation_depot_s{l};
-            const int operation_depot_t{n_depots + l};
+            const size_t operation_depot_s{l};
+            const size_t operation_depot_t{n_depots + l};
 
             operations_subset &routing_subset_l = routing_subset[l];
             const vector<int> &r_subset = routing_subset_l.get_operations_id();
@@ -236,7 +236,7 @@ namespace SYNC_LIB
         for (size_t j{0}; j < n_operations; ++j)
         {
             const auto &operation = operations_map_inv_[j];
-            const int i{(operation.first - 1) % n_vertices};
+            const size_t i{(operation.first - 1) % n_vertices};
 
             synchronization_subset[i].push_back(j);
         }

@@ -77,7 +77,6 @@ namespace TSP
      * @note Supports extended keywords for multi-day and time window problems
      */
     class TSPLIB_instance
-    class TSPLIB_instance
     {
         /// Function pointer type for distance calculation methods
         typedef double (TSPLIB_instance::*distanceType)(const coordType &, const coordType &) const;
@@ -192,8 +191,6 @@ namespace TSP
          * @note Automatically detects format and distance type
          * @note Computes distance matrix if coordinates are provided
          */
-        void read(const string &input_file);
-
         void read(const string &input_file);
 
         // Getters

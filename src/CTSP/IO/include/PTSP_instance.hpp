@@ -59,7 +59,6 @@ namespace PTSP
      * @see TSP::TSPLIB_instance for the underlying file format parser
      */
     class instance
-    class instance
     {
     protected:
         string id_;      ///< Instance identifier/name
