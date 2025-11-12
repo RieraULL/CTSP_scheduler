@@ -1,19 +1,19 @@
-# Guía de Instalación
+# Installation Guide
 
-Esta guía cubre la instalación y compilación del proyecto con dos alternativas de solver:
+This guide covers installation and compilation of the project with two solver alternatives:
 
-- CLP (COIN-OR) – open-source, recomendado para LP
-- CPLEX (IBM ILOG) – comercial, recomendado si ya lo usas
+- CLP (COIN-OR) – open-source, recommended for LP
+- CPLEX (IBM ILOG) – commercial, recommended if you already use it
 
-Ambas opciones funcionan mediante presets de CMake.
+Both options work through CMake presets.
 
-## Requisitos comunes
+## Common Requirements
 
 - CMake 3.10+
-- Compilador C++ con soporte C++14
-- Git (opcional, para clonar el repo)
+- C++ compiler with C++14 support
+- Git (optional, to clone the repo)
 
-Clona el repositorio:
+Clone the repository:
 
 ```bash
 git clone https://github.com/RieraULL/CTSP_scheduler.git
@@ -22,11 +22,11 @@ cd CTSP_scheduler
 
 ---
 
-## Opción A: CLP (Open-Source)
+## Option A: CLP (Open-Source)
 
-El proyecto puede construir con CLP sin necesidad de `ClpConfig.cmake` gracias a un mecanismo de descubrimiento automático de headers y librerías del sistema.
+The project can build with CLP without requiring `ClpConfig.cmake` thanks to an automatic discovery mechanism for system headers and libraries.
 
-### 1) Instalar dependencias (Debian/Ubuntu)
+### 1) Install dependencies (Debian/Ubuntu)
 
 ```bash
 sudo apt-get update
@@ -35,21 +35,21 @@ sudo apt-get install -y \
   pkgconf
 ```
 
-Verificación rápida (opcional):
+Quick verification (optional):
 
 ```bash
 ls /usr/include/coin | grep -E "^Clp.*hpp$" | head
 ls /usr/lib/x86_64-linux-gnu/libClp.so
 ```
 
-### 2) Configurar y compilar (preset clp)
+### 2) Configure and build (clp preset)
 
 ```bash
 cmake --preset clp
 cmake --build --preset clp -j
 ```
 
-### 3) Ejecutar (CLP)
+### 3) Run (CLP)
 
 ```bash
 ./build-clp/bin/ctsp_scheduler ctsp2 \
@@ -58,42 +58,42 @@ cmake --build --preset clp -j
   output/bayg29_p5_f90_lL.sched.json
 ```
 
-### Notas y resolución de problemas
+### Notes and troubleshooting
 
-- Si CMake no encuentra `ClpConfig.cmake`, el proyecto hace fallback automático buscando headers en `/usr/include/coin` y librerías en `/usr/lib/x86_64-linux-gnu`.
-- CLP es LP-only. Si tu modelo tiene variables enteras, se resolverá la relajación LP. Para MIP integra CBC (COIN-OR Branch-and-Cut).
-- Instalación personalizada (si instalaste CLP fuera de rutas estándar):
+- If CMake doesn't find `ClpConfig.cmake`, the project automatically falls back to searching for headers in `/usr/include/coin` and libraries in `/usr/lib/x86_64-linux-gnu`.
+- CLP is LP-only. If your model has integer variables, the LP relaxation will be solved. For MIP, integrate CBC (COIN-OR Branch-and-Cut).
+- Custom installation (if you installed CLP outside standard paths):
 
 ```bash
-# Si tienes ClpConfig.cmake
+# If you have ClpConfig.cmake
 cmake --preset clp -DClp_DIR=/usr/local/lib/cmake/Clp
 
-# O añade el prefijo
+# Or add the prefix
 cmake --preset clp -DCMAKE_PREFIX_PATH=/usr/local
 ```
 
 ---
 
-## Opción B: CPLEX (Comercial)
+## Option B: CPLEX (Commercial)
 
-Asegúrate de tener IBM ILOG CPLEX instalado localmente. Luego apunta la variable `CPX_PATH` en `src/util/CMakeLists.txt` a tu instalación.
+Make sure you have IBM ILOG CPLEX installed locally. Then point the `CPX_PATH` variable in `src/util/CMakeLists.txt` to your installation.
 
-### 1) Ajustar ruta CPLEX
+### 1) Adjust CPLEX path
 
-Edita `src/util/CMakeLists.txt` y cambia:
+Edit `src/util/CMakeLists.txt` and change:
 
 ```cmake
-set (CPX_PATH /ruta/a/tu/instalacion/CPLEX_Studio221)
+set (CPX_PATH /path/to/your/CPLEX_Studio221)
 ```
 
-### 2) Configurar y compilar (preset cplex)
+### 2) Configure and build (cplex preset)
 
 ```bash
 cmake --preset cplex
 cmake --build --preset cplex -j
 ```
 
-### 3) Ejecutar (CPLEX)
+### 3) Run (CPLEX)
 
 ```bash
 ./build-cplex/bin/ctsp_scheduler ctsp2 \
@@ -104,14 +104,14 @@ cmake --build --preset cplex -j
 
 ---
 
-## Depuración en VS Code (opcional)
+## Debugging in VS Code (optional)
 
-Incluimos configuraciones en `.vscode/launch.json` para ejecutar `ctsp_scheduler` con los argumentos de ejemplo. Hay variantes para `build-cplex` y `build-clp`.
+We include configurations in `.vscode/launch.json` to run `ctsp_scheduler` with example arguments. There are variants for `build-cplex` and `build-clp`.
 
 ---
 
-## Consejos
+## Tips
 
-- Si cambias de solver (CLP/CPLEX), vuelve a configurar con el preset correspondiente.
-- Si ves errores de link con CLP, confirma la presencia de `libClp.so`, `libClpSolver.so`, `libCoinUtils.so`, `libOsi.so`, `libOsiClp.so` en `/usr/lib/x86_64-linux-gnu/`.
-- Para documentación del código (Doxygen), revisa la sección correspondiente en el `README.md`.
+- If you switch solvers (CLP/CPLEX), reconfigure with the corresponding preset.
+- If you see link errors with CLP, confirm the presence of `libClp.so`, `libClpSolver.so`, `libCoinUtils.so`, `libOsi.so`, `libOsiClp.so` in `/usr/lib/x86_64-linux-gnu/`.
+- For code documentation (Doxygen), see the corresponding section in `README.md`.

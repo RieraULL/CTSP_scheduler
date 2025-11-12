@@ -56,6 +56,12 @@ The Consistent Traveling Salesman Problem is defined in the following research p
 
 ```text
 CTSP_scheduler/
+├── .vscode/
+│   └── launch.json             # VS Code debug configurations (cplex/clp)
+│
+├── docs/
+│   └── INSTALL.md              # Complete installation guide (CLP/CPLEX)
+│
 ├── src/
 │   ├── main/                   # Main scheduler application
 │   │   ├── include/            # Headers (sch_io.hpp, schedulers.hpp)
@@ -79,13 +85,27 @@ CTSP_scheduler/
 │   │       └── README.md       # Scheduling algorithm
 │   │
 │   └── util/                   # Utilities (matrix, LP solver interface)
+│       ├── include/
+│       │   ├── model_description.hpp  # Solver-agnostic model representation
+│       │   ├── LP_solver.hpp          # Abstract solver interface
+│       │   ├── matrix.hpp             # Generic matrix class
+│       │   ├── CLP/                   # CLP solver implementation
+│       │   │   ├── CLP_solver.hpp
+│       │   │   └── CLP_model_structure.hpp
+│       │   └── CPX/                   # CPLEX solver implementation
+│       │       ├── CPX_solver.hpp
+│       │       └── CPX_model_structure.hpp
 │       └── README.md           # Matrix class + CPLEX/CLP guide
 │
 ├── input/                      # Example instance and solution files
 ├── output/                     # Generated schedule files
-├── build/                      # Build directory (generated)
-├── CMakeLists.txt             # Root CMake configuration
-└── README.md                  # This file
+│
+├── build-cplex/                # CPLEX build directory (generated)
+├── build-clp/                  # CLP build directory (generated)
+│
+├── CMakeLists.txt              # Root CMake configuration
+├── CMakePresets.json           # CMake presets (cplex/clp)
+└── README.md                   # This file
 ```
 
 ## Quick Start
