@@ -6,6 +6,23 @@
 
 A comprehensive C++ framework to verify a feasible solution and to provide with a scheduling for the **Consistent Traveling Salesman Problems (CTSP)** (arrival time consistency). This project converts CTSP routing solutions into temporal schedules, ensuring that all consistency constraints between multiple depots are satisfied.
 
+---
+
+> **💡 Why This Repository?**
+>
+> You might wonder: *Is all this code really necessary just to represent a schedule from a feasible solution?*
+>
+> **Answer:** Obviously not. The purpose of this repository is to provide researchers with insight into how we implemented our model in:
+>
+> **Riera-Ledesma, J., Rodríguez-Martín, I., & Hernández-Pérez, H.** (2025)  
+> *Dual-driven path elimination for vehicle routing with idle times and arrival-time consistency*  
+> Computers & Operations Research, 107326  
+> [https://doi.org/10.1016/j.cor.2025.107326](https://doi.org/10.1016/j.cor.2025.107326)
+>
+> It also provides a mechanism to **generate cuts from infeasible solutions** (not necessarily integer), which is a key component of our branch-and-cut approach.
+
+---
+
 ## Overview
 
 The **CTSP Scheduler** is a specialized tool designed to verify a solution for the Consistent Traveling Salesman Problem (CTSP), a variant of the classical TSP where:
@@ -118,7 +135,7 @@ CTSP_scheduler/
 
 ### Build and Run (CMake Presets)
 
-**Opción A: Con CLP (Open-Source)**
+#### Option A: With CLP (Open-Source)
 
 ```bash
 # Clone the repository
@@ -135,7 +152,7 @@ cmake --build --preset clp -j
 ./build-clp/bin/ctsp_scheduler ctsp2 input/bayg29_p5_f90_lL.contsp input/bayg29_p5_f90_lL.sol output/schedule.json
 ```
 
-**Opción B: Con CPLEX (Comercial)**
+#### Option B: With CPLEX (Commercial)
 
 ```bash
 # Clone the repository
@@ -154,15 +171,15 @@ cmake --build --preset cplex -j
 
 **Output:** A JSON file with temporal schedules for each depot and time windows for each customer.
 
-> **Nota**: Para detalles de instalación de dependencias (CLP o CPLEX), consulta [docs/INSTALL.md](docs/INSTALL.md).
+> **Note**: For details on installing dependencies (CLP or CPLEX), see [docs/INSTALL.md](docs/INSTALL.md).
 
-## Instalación
+## Installation
 
-Consulta la guía completa de instalación en: [docs/INSTALL.md](docs/INSTALL.md)
+See the complete installation guide at: [docs/INSTALL.md](docs/INSTALL.md)
 
-## Depuración en VS Code (opcional)
+## Debugging in VS Code (optional)
 
-Incluimos configuraciones de depuración en `.vscode/launch.json` para ejecutar `ctsp_scheduler` con los mismos argumentos de ejemplo. Hay variantes para ejecutables en `build-cplex` y `build-clp`.
+We include debug configurations in `.vscode/launch.json` to run `ctsp_scheduler` with example arguments. There are variants for executables in `build-cplex` and `build-clp`.
 
 ## Usage
 
