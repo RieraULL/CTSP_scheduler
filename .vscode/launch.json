@@ -1,0 +1,119 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug ctsp_scheduler (build)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/ctsp_scheduler",
+            "args": [
+                "ctsp2",
+                "${workspaceFolder}/input/bayg29_p5_f90_lL.contsp",
+                "${workspaceFolder}/input/bayg29_p5_f90_lL.sol",
+                "${workspaceFolder}/output/bayg29_p5_f90_lL.sched.json"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false,
+                "engineLogging": false,
+                "programOutput": true,
+                "exceptions": false
+            }
+        },
+        {
+            "name": "Debug ctsp_scheduler (cplex)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build-cplex/bin/ctsp_scheduler",
+            "args": [
+                "ctsp2",
+                "${workspaceFolder}/input/bayg29_p5_f90_lL.contsp",
+                "${workspaceFolder}/input/bayg29_p5_f90_lL.sol",
+                "${workspaceFolder}/output/bayg29_p5_f90_lL.sched.json"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false,
+                "engineLogging": false,
+                "programOutput": true,
+                "exceptions": false
+            }
+        },
+        {
+            "name": "Debug ctsp_scheduler (clp)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build-clp/bin/ctsp_scheduler",
+            "args": [
+                "ctsp2",
+                "${workspaceFolder}/input/bayg29_p5_f90_lL.contsp",
+                "${workspaceFolder}/input/bayg29_p5_f90_lL.sol",
+                "${workspaceFolder}/output/bayg29_p5_f90_lL.sched.json"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "logging": {
+                "moduleLoad": false,
+                "trace": false,
+                "engineLogging": false,
+                "programOutput": true,
+                "exceptions": false
+            }
+        }
+    ]
+}

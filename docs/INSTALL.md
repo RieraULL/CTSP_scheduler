@@ -20,6 +20,8 @@ git clone https://github.com/RieraULL/CTSP_scheduler.git
 cd CTSP_scheduler
 ```
 
+> **Important**: If you copy or move the project directory manually (not via git clone), make sure to delete any existing `build-*` directories first, as they contain CMake cache files with absolute paths that will cause configuration errors.
+
 ---
 
 ## Option A: CLP (Open-Source)
@@ -115,3 +117,23 @@ We include configurations in `.vscode/launch.json` to run `ctsp_scheduler` with 
 - If you switch solvers (CLP/CPLEX), reconfigure with the corresponding preset.
 - If you see link errors with CLP, confirm the presence of `libClp.so`, `libClpSolver.so`, `libCoinUtils.so`, `libOsi.so`, `libOsiClp.so` in `/usr/lib/x86_64-linux-gnu/`.
 - For code documentation (Doxygen), see the corresponding section in `README.md`.
+
+### Troubleshooting: "source does not match the source used to generate cache"
+
+If you get this CMake error after copying or moving the project:
+
+```text
+CMake Error: The source ".../CMakeLists.txt" does not match the source
+"..." used to generate cache. Re-run cmake with a different source directory.
+```
+
+**Cause**: CMake cache files (`CMakeCache.txt`) in `build-*` directories contain absolute paths from the original location.
+
+**Solution**: Delete all build directories before reconfiguring:
+
+```bash
+rm -rf build-clp build-cplex
+cmake --preset clp  # or cplex
+```
+
+The build directories are excluded from git via `.gitignore`, so they won't be included if you clone fresh from the repository.

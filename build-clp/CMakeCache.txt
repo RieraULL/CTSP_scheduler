@@ -154,7 +154,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=Project
+CMAKE_PROJECT_NAME:STATIC=CTSP_scheduler
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -224,6 +224,15 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 //Path to a library.
 COINUTILS_LIB:FILEPATH=/usr/lib/x86_64-linux-gnu/libCoinUtils.so
 
+//Value Computed by CMake
+CTSP_scheduler_BINARY_DIR:STATIC=/home/riera/Documentos/GitHub/CTSP_scheduler/build-clp
+
+//Value Computed by CMake
+CTSP_scheduler_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+CTSP_scheduler_SOURCE_DIR:STATIC=/home/riera/Documentos/GitHub/CTSP_scheduler
+
 //The directory containing a CMake configuration file for Clp.
 Clp_DIR:PATH=Clp_DIR-NOTFOUND
 
@@ -232,15 +241,6 @@ OSICLP_LIB:FILEPATH=/usr/lib/x86_64-linux-gnu/libOsiClp.so
 
 //Path to a library.
 OSI_LIB:FILEPATH=/usr/lib/x86_64-linux-gnu/libOsi.so
-
-//Value Computed by CMake
-Project_BINARY_DIR:STATIC=/home/riera/Documentos/GitHub/CTSP_scheduler/build-clp
-
-//Value Computed by CMake
-Project_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-Project_SOURCE_DIR:STATIC=/home/riera/Documentos/GitHub/CTSP_scheduler
 
 //Use COIN-OR CLP instead of IBM CPLEX
 USE_CLP:BOOL=ON
