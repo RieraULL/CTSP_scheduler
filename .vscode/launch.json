@@ -29,7 +29,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "",
+            "preLaunchTask": "Build ctsp_scheduler (build)",
             "miDebuggerPath": "/usr/bin/gdb",
             "logging": {
                 "moduleLoad": false,
@@ -67,7 +67,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "",
+            "preLaunchTask": "Build ctsp_scheduler (build-cplex)",
             "miDebuggerPath": "/usr/bin/gdb",
             "logging": {
                 "moduleLoad": false,
@@ -105,7 +105,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "",
+            "preLaunchTask": "Build ctsp_scheduler (build-clp)",
             "miDebuggerPath": "/usr/bin/gdb",
             "logging": {
                 "moduleLoad": false,
