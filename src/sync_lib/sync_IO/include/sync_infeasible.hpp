@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 
+#include "sync_model_a_builder.hpp"
+
 using namespace std;
 
 namespace SYNC_LIB
@@ -28,8 +30,19 @@ namespace SYNC_LIB
 
         vector<vector<int>> violated_cycles_; ///< Detected violated cycles in the solution
 
+        const vector<string> &operation_names_;
+        const vector<string> &routing_arc_names_; ///< Names for routing arcs (display)
+        const vector<string> &sync_arc_names_;    ///< Names for sync arcs (display)
+        const vector<triplet> &routing_arcs_;
+        const vector<triplet> &sync_arcs_;
+        const vector<double> &routing_arc_times_;
+
+        const vector<double> &x_;
+
+        const double tol_{1E-6}; ///< Tolerance for variable activity
+
     public:
-        sync_infeasible(void);
+        sync_infeasible(const vector<double> &x,const sync_model_a_builder &builder);
         virtual ~sync_infeasible(void);
 
         inline vector<double> &alpha(void) { return alpha_; }
@@ -42,5 +55,12 @@ namespace SYNC_LIB
 
         inline vector<vector<int>> &violated_cycles(void) { return violated_cycles_; }
         inline const vector<vector<int>> &violated_cycles(void) const { return violated_cycles_; }
+
+        ostream &write_infeasible_paths(ostream &os) const;
+        ostream &write_primal_dual_graph(ostream &os) const;
+
+    private:
+        ostream &write_path_(ostream &os, const vector<int> &cycle) const;
+        ostream &write_(ostream &os, const vector<double> &x, const vector<double> &alpha_v, const vector<double> &beta_v) const;
     };
 } // namespace SYNC_LIB

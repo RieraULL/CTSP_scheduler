@@ -1,11 +1,11 @@
 /**
  * @file path_finder.cpp
  * @brief Implementation of cycle detection for CTSP synchronization constraints
- * 
+ *
  * Implements DFS-based cycle enumeration in support graphs constructed from
  * LP solutions. Cycles indicate violated synchronization constraints in the
  * branch-and-cut algorithm for CTSP solving.
- * 
+ *
  * Key algorithms:
  * - Support graph construction from LP solution (active arcs)
  * - DFS path enumeration between sync arc endpoints
@@ -28,13 +28,13 @@ namespace SYNC_LIB
 
     /**
      * Constructor: Initialize path finder from model builder
-     * 
+     *
      * Extracts all necessary references from builder:
      * - Routing and sync arc structures (triplets)
      * - Operation and depot counts
      * - Arc index maps for O(1) lookup
      * - Arc times and names for display
-     * 
+     *
      * Initializes support graph with n_operations + 2 vertices:
      * - Vertices 0 to n_depots-1: depots
      * - Vertices n_depots to n_operations+1: operations
@@ -48,8 +48,6 @@ namespace SYNC_LIB
                                                                     sync_arc_map_(builder.get_sync_arcs_pair_map()),
                                                                     routing_arc_times_(builder.get_routing_arc_times()),
                                                                     sync_arc_times_(builder.get_sync_arc_times()),
-                                                                    routing_arc_names_(builder.get_routing_arc_names()),
-                                                                    sync_arc_names_(builder.get_sync_arc_names()),
                                                                     n_routing_arcs_(builder.get_n_routing_arcs()),
                                                                     support_graph_(n_operations_ + 2)
     {
@@ -64,15 +62,15 @@ namespace SYNC_LIB
 
     /**
      * Main cycle detection algorithm
-     * 
+     *
      * Two-phase process:
      * 1. Update support graph with active arcs from LP solution
      * 2. Find all cycles through active sync arcs using DFS
-     * 
+     *
      * Support graph contains:
      * - Edges for routing arcs with alpha > tolerance
      * - Edges for sync arcs with gamma > tolerance
-     * 
+     *
      * For each active sync arc (i,j), finds all simple paths from i to j,
      * then closes each path with arc (j,i) to form cycle.
      */
@@ -89,45 +87,15 @@ namespace SYNC_LIB
     }
 
     /**
-     * Write single path using arc names
-     * 
-     * Converts arc indices to human-readable names:
-     * - Indices [0, n_routing_arcs): routing arc names
-     * - Indices [n_routing_arcs, ...): sync arc names (offset removed)
-     * 
-     * Outputs space-separated arc names followed by newline.
-     */
-    ostream &path_finder::write_path_(ostream &os, const vector<int> &alpha_beta_path) const
-    {
-        const size_t n_routing_arcs{routing_arcs_.size()};
-
-        for (int inx : alpha_beta_path)
-        {
-            if (inx < (int)n_routing_arcs)
-            {
-                os << routing_arc_names_[inx] << " ";
-            }
-            else
-            {
-                os << sync_arc_names_[inx - (int)n_routing_arcs] << " ";
-            }
-        }
-
-        os << endl;
-
-        return os;
-    }
-
-    /**
      * Find closing arc index for cycle formation
-     * 
+     *
      * Given sync arc (i,j), finds reverse arc (j,i) to close the cycle.
-     * 
+     *
      * Steps:
      * 1. Create inverse arc pair (j,i)
      * 2. Lookup in sync_arc_map to get sync arc index
      * 3. Offset by n_routing_arcs to get global arc index
-     * 
+     *
      * Example: arc (5,7) -> inverse (7,5) -> sync_arc_index=3 -> return 3+n_routing_arcs
      */
     int path_finder::closing_arc_(const pair<int, int> &arc) const
@@ -144,19 +112,19 @@ namespace SYNC_LIB
 
     /**
      * Remove duplicate cycles (inefficient but functional)
-     * 
+     *
      * Duplicates defined as: cycles with identical routing arc sets.
      * Ignores sync arcs and arc order for comparison.
-     * 
+     *
      * Algorithm:
      * 1. Convert each cycle to boolean vector of routing arcs (O(n×m))
      * 2. Compare all pairs using boolean vector equality (O(n²×m))
      * 3. Mark duplicates for removal
      * 4. Rebuild cycle list without duplicates (O(n))
-     * 
+     *
      * Time complexity: O(n²×m) where n = cycles, m = routing arcs
      * Space complexity: O(n×m) for boolean vectors
-     * 
+     *
      * Note: Self-deprecating comment acknowledges inefficiency.
      * Could be optimized with hashing or canonical cycle representation.
      */
@@ -243,15 +211,15 @@ namespace SYNC_LIB
 
     /**
      * Enumerate all cycles through active synchronization arcs
-     * 
+     *
      * For each active sync arc (i,j):
      * 1. Run DFS from i to j to find all simple paths
      * 2. Convert each vertex sequence to arc index sequence
      * 3. Close cycle by appending reverse sync arc (j,i)
      * 4. Add cycle to results
-     * 
+     *
      * Finally removes duplicate cycles (same routing arc set).
-     * 
+     *
      * beta_v parameter currently unused (future extension for time-aware paths).
      */
     void path_finder::find_full_paths_(const vector<double> &alpha_v,
@@ -263,10 +231,10 @@ namespace SYNC_LIB
 
         const bool beta_empty{(beta_v.size() == 0)};
 
-        vector<vector<int>> c_sequences;  // Vertex sequences (paths)
+        vector<vector<int>> c_sequences; // Vertex sequences (paths)
 
         vector<int> type;
-        vector<int> cycle;  // Arc sequence for current cycle
+        vector<int> cycle; // Arc sequence for current cycle
 
         // For each active sync arc, find all paths and close to form cycles
         for (const pair<int, int> &arc : active_sync_arcs)
@@ -304,15 +272,15 @@ namespace SYNC_LIB
 
     /**
      * Convert vertex sequence to arc index sequence
-     * 
+     *
      * Takes path through operations (vertex IDs) and converts to
      * sequence of arc indices (routing + sync arcs).
-     * 
+     *
      * For each consecutive pair (s,t) in sequence:
      * 1. Check routing_arc_map for routing arc (s,t)
      * 2. If not found, check sync_arc_map for sync arc (s,t)
      * 3. Sync arc indices offset by n_routing_arcs
-     * 
+     *
      * Parameters alpha_v and beta_v currently unused (reserved for future).
      */
     void path_finder::sequence_2_path_(const vector<int> &sequence,
@@ -356,17 +324,17 @@ namespace SYNC_LIB
 
     /**
      * Build support graph from LP solution
-     * 
+     *
      * Constructs directed graph with edges corresponding to active arcs:
      * - Routing arcs with alpha > tolerance
      * - Sync arcs with gamma > tolerance
-     * 
+     *
      * Also identifies active sync arcs for cycle detection:
      * - If arc connects non-depot operations: always active
      * - If arc connects depots: active only if both depots used in routing
-     * 
+     *
      * This ensures cycles only form through meaningful synchronizations.
-     * 
+     *
      * Note: Inverted arc direction stored in active_sync_arcs (j,i) instead of (i,j)
      * for compatibility with DFS cycle closure.
      */
@@ -381,7 +349,7 @@ namespace SYNC_LIB
         const size_t n_routing_arcs{routing_arcs_.size()};
         const size_t n_sync_arcs{sync_arcs_.size()};
 
-        set<int> active_depot_set;  // Depots with at least one active routing arc
+        set<int> active_depot_set; // Depots with at least one active routing arc
 
         // Add routing arcs to support graph (alpha > tolerance)
         for (size_t i{0}; i < n_routing_arcs; i++)

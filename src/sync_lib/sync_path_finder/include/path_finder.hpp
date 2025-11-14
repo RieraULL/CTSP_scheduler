@@ -68,9 +68,6 @@ namespace SYNC_LIB
         const vector<double> &routing_arc_times_;  ///< Travel times for routing arcs
         const vector<double> &sync_arc_times_;     ///< Time lags for sync arcs
 
-        const vector<string> &routing_arc_names_;  ///< Names for routing arcs (display)
-        const vector<string> &sync_arc_names_;     ///< Names for sync arcs (display)
-
         size_t n_routing_arcs_;  ///< Total number of routing arcs
 
         GOMA::search_graph support_graph_;  ///< DFS graph for cycle detection
@@ -111,47 +108,9 @@ namespace SYNC_LIB
                         const vector<double> &beta_v,
                         const vector<double> &gamma_v,
                         vector<vector<int>> &cycles);
-
-        /**
-         * @brief Write all paths to output stream
-         * @param os Output stream
-         * @param alpha_beta_path Vector of paths (each path = vector of arc indices)
-         * @return Reference to output stream
-         * 
-         * Writes each path on separate line using arc names.
-         */
-        ostream &write_paths(ostream &os, const vector<vector<int>> &alpha_beta_path) const
-        {
-            for (const vector<int> &path : alpha_beta_path)
-            {
-                write_path_(os, path);
-                os << endl;
-            }
-
-            return os;
-        }
-
+        
     protected:
-        /**
-         * @brief Write single path to output stream using arc names
-         * @param os Output stream
-         * @param alpha_beta_path Path as vector of arc indices
-         * @return Reference to output stream
-         */
-        ostream &write_path_(ostream &os, const vector<int> &alpha_beta_path) const;
-
-        /**
-         * @brief Convert vertex sequence to arc index sequence
-         * @param sequence Vertex sequence (path through operations)
-         * @param alpha_v Routing arc variables (unused)
-         * @param beta_v Time variables (unused)
-         * @param[out] cycle Output arc index sequence
-         * 
-         * For each consecutive vertex pair (s,t), finds corresponding arc:
-         * - First checks routing_arc_map for routing arc
-         * - If not found, checks sync_arc_map for sync arc
-         * - Sync arc indices offset by n_routing_arcs
-         */
+    
         void sequence_2_path_(const vector<int> &sequence,
                               const vector<double> &alpha_v,
                               const vector<double> &beta_v,

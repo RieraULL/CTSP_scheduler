@@ -57,7 +57,7 @@ namespace SCH
 
         // Compute schedule and time windows via LP
         SYNC_LIB::sync_scheduling feasible_schedule;
-        SYNC_LIB::sync_infeasible infeasible_paths;
+        SYNC_LIB::sync_infeasible infeasible_paths(x, model_builder);
 
         const bool feasible{scheduler.solve(feas_sol.get_instance_name(), x, feasible_schedule, infeasible_paths)};
 

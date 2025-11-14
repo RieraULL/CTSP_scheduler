@@ -7,21 +7,22 @@
  */
 
 #include "sch_io.hpp"
+#include <cstdlib>
 
 namespace SCH
 {
     /**
      * @brief Default constructor - empty file paths
      */
-    input_files::input_files(void) : ins_file(""), out_file("")
+    input_files::input_files(void) : ins_file(""), sol_file("")
     {
     }
     /**
      * @brief Constructor with file paths
      * @param _ins_file Path to instance file (.contsp)
-     * @param _out_file Path to solution file (.sol)
+     * @param _sol_file Path to solution file (.sol)
      */
-    input_files::input_files(const string &_ins_file, const string &_out_file) : ins_file(_ins_file), out_file(_out_file)
+    input_files::input_files(const string &_ins_file, const string &_sol_file) : ins_file(_ins_file), sol_file(_sol_file)
     {
     }
 
@@ -34,10 +35,25 @@ namespace SCH
      * @param _ins_file Instance file path
      * @param _out_file Solution file path
      */
-    void input_files::set(const string &_ins_file, const string &_out_file)
+    void input_files::set(const string &_ins_file, const string &_sol_file)
     {
         ins_file = _ins_file;
-        out_file = _out_file;
+        sol_file= _sol_file;
+    }
+
+
+    output_files::output_files(const string &_output_path, const string &_ins_file) : output_path(_output_path)
+    {
+        // Extrae de ins_file el nombre de la instancia (sin path ni extension)
+        size_t last_slash_pos = _ins_file.find_last_of("/\\");
+        size_t start_pos = (last_slash_pos == string::npos) ? 0 : last_slash_pos + 1;
+        size_t dot_pos = _ins_file.find_last_of('.');
+        size_t end_pos = (dot_pos == string::npos) ? _ins_file.length() : dot_pos;
+        instance_name = _ins_file.substr(start_pos, end_pos - start_pos);
+    }
+
+    output_files::~output_files(void)
+    {
     }
 
     /**
@@ -91,7 +107,7 @@ namespace SCH
      * 
      * @note Exits with error if problem type is not recognized
      */
-    void set_files(int argc, char **argv, output_streams &sch_instance, input_files &input_files_instance, problem_type &prob_type)
+    void set_files(int argc, char **argv, output_streams &sch_instance, input_files &input_files_instance, output_files &output_files_instance, problem_type &prob_type)
     {
 
         const string prob_type_s(argv[1]);
@@ -101,6 +117,7 @@ namespace SCH
         const string sch_file(argv[4]);
 
         input_files_instance.set(ins_file, sol_file);
+        output_files_instance.set(sch_file, ins_file);
 
         sch_instance.set(sch_file);
 
