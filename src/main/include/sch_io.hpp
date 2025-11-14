@@ -62,9 +62,13 @@ namespace SCH
         string instance_name;
 
         output_files(const string &_output_path, const string &_ins_file);
+        output_files(void);
         ~output_files(void);
 
         void set(const string &_output_path, const string &_ins_file);
+
+    private:
+        const string get_instance_name(const string &_ins_file) const;
     };
 
     /**
@@ -133,6 +137,6 @@ namespace SCH
      *
      * @note Exits program with error if problem_type is not recognized
      */
-    void set_files(int argc, char **argv, output_streams &sch_instance, input_files &input_files_instance, problem_type &prob_type);
+    void set_files(int argc, char **argv, output_streams &sch_instance, input_files &input_files_instance, output_files &output_files_instance, problem_type &prob_type);
 
 }

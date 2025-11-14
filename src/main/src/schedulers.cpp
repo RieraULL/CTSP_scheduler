@@ -39,7 +39,7 @@ namespace SCH
      * @note Asserts that solution is feasible (LP has solution)
      * @note Output format includes schedules per depot and time windows per customer
      */
-    void CTSP2_scheduler(const CTSP::instance &instance, const SYNC_LIB::sync_solution &feas_sol, SCH::output_streams &output_streams)
+    void CTSP2_scheduler(const SCH::output_files &output_files, const CTSP::instance &instance, const SYNC_LIB::sync_solution &feas_sol)
     {
         // Build synchronization model from CTSP instance
         CTSP::CTSP_model_a_builder model_builder(CTSP::CTSP_problem_type::CTSP2, instance);
@@ -63,11 +63,25 @@ namespace SCH
 
         if (feasible)
         {
+            std::ofstream schedule_file(output_files.output_path + "/" + output_files.instance_name + ".sched.json");
+            std::ostream& sch_s = schedule_file;
+
             // Write schedule to JSON output
-            feas_sol.write_header(output_streams.sch_s);
-            output_streams.sch_s << endl;
-            feasible_schedule.write_json(output_streams.sch_s);
-            feas_sol.write_end(output_streams.sch_s);
+            feas_sol.write_header(sch_s);
+            sch_s << endl;
+            feasible_schedule.write_json(sch_s);
+            feas_sol.write_end(sch_s);
+
+            schedule_file.close();
+        }
+        else
+        {
+            std::ofstream infeasible_paths_file(output_files.output_path + "/" + output_files.instance_name + "_infeasible_paths.txt");
+            std::ofstream primal_dual_graph_file(output_files.output_path + "/" + output_files.instance_name + "_primal_dual_graph.dot");
+            infeasible_paths.write_infeasible_paths(infeasible_paths_file);
+            infeasible_paths.write_primal_dual_graph(primal_dual_graph_file);
+            infeasible_paths_file.close();
+            primal_dual_graph_file.close();
         }
 
         // Verify solution feasibility
@@ -92,14 +106,15 @@ namespace SCH
      * 4. Write to .sched.json file
      */
     int ctsp2_scheduler(const SCH::input_files &input_files,
+                        const SCH::output_files &output_files,
                         SCH::output_streams &os_instance)
     {
         // Load instance and solution from files
         CTSP::instance I(input_files.ins_file);
-        SYNC_LIB::sync_solution feas_sol(input_files.out_file);
+        SYNC_LIB::sync_solution feas_sol(input_files.sol_file);
 
         // Generate schedule
-        (*scheduler_array[0])(I, feas_sol, os_instance);
+        (*scheduler_array[0])(output_files, I, feas_sol);
 
         return 0;
     }
@@ -121,10 +136,11 @@ namespace SCH
      * Currently only CTSP2 is implemented.
      */
     int run_method(const SCH::input_files &input_files,
+                   const SCH::output_files &output_files,
                    SCH::output_streams &sch_instance,
                    SCH::problem_type prob_type)
     {
-        return (*sch_method_array[static_cast<int>(prob_type)])(input_files, sch_instance);
+        return (*sch_method_array[static_cast<int>(prob_type)])(input_files, output_files, sch_instance);
     }
 
 }

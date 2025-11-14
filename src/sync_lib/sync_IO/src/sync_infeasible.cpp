@@ -62,7 +62,7 @@ namespace SYNC_LIB
 
     ostream &sync_infeasible::write_primal_dual_graph(ostream &os) const
     {
-        write_(os, x_, alpha_, beta_);
+        write_(os, x_, alpha_, gamma_);
 
         return os;
     }

@@ -44,16 +44,30 @@ namespace SCH
 
     output_files::output_files(const string &_output_path, const string &_ins_file) : output_path(_output_path)
     {
-        // Extrae de ins_file el nombre de la instancia (sin path ni extension)
-        size_t last_slash_pos = _ins_file.find_last_of("/\\");
-        size_t start_pos = (last_slash_pos == string::npos) ? 0 : last_slash_pos + 1;
-        size_t dot_pos = _ins_file.find_last_of('.');
-        size_t end_pos = (dot_pos == string::npos) ? _ins_file.length() : dot_pos;
-        instance_name = _ins_file.substr(start_pos, end_pos - start_pos);
+        instance_name = get_instance_name(_ins_file);
+    }
+
+    output_files::output_files(void) : output_path(""), instance_name("")
+    {
     }
 
     output_files::~output_files(void)
     {
+    }
+
+    void output_files::set(const string &_output_path, const string &_ins_file)
+    {
+        output_path = _output_path;
+        instance_name = get_instance_name(_ins_file);
+    }
+
+    const string output_files::get_instance_name(const string &_ins_file) const
+    {
+        size_t last_slash_pos = _ins_file.find_last_of("/\\");
+        size_t start_pos = (last_slash_pos == string::npos) ? 0 : last_slash_pos + 1;
+        size_t dot_pos = _ins_file.find_last_of('.');
+        size_t end_pos = (dot_pos == string::npos) ? _ins_file.length() : dot_pos;
+        return _ins_file.substr(start_pos, end_pos - start_pos);
     }
 
     /**

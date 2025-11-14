@@ -67,7 +67,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "Build ctsp_scheduler (build-cplex)",
+            "preLaunchTask": "Configure & Build ctsp_scheduler (cplex)",
             "miDebuggerPath": "/usr/bin/gdb",
             "logging": {
                 "moduleLoad": false,
@@ -86,7 +86,7 @@
                 "ctsp2",
                 "${workspaceFolder}/input/bayg29_p5_f90_lL.contsp",
                 "${workspaceFolder}/input/bayg29_p5_f90_lL.infeas.sol",
-                "${workspaceFolder}/output/bayg29_p5_f90_lL.sched.json"
+                "${workspaceFolder}/output/"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -105,7 +105,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "Build ctsp_scheduler (build-clp)",
+            "preLaunchTask": "Configure & Build ctsp_scheduler (clp)",
             "miDebuggerPath": "/usr/bin/gdb",
             "logging": {
                 "moduleLoad": false,

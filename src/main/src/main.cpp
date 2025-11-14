@@ -86,13 +86,13 @@ int main(int argc, char **argv)
         // Initialize I/O structures
         SCH::output_streams output_streams;
         SCH::input_files input_files;
+        SCH::output_files output_files;
         SCH::problem_type prob_type;
 
         // Parse command-line arguments
-        SCH::set_files(argc, argv, output_streams, input_files, prob_type);
-
+        SCH::set_files(argc, argv, output_streams, input_files, output_files, prob_type);
         // Execute scheduling workflow
-        SCH::run_method(input_files, output_streams, prob_type);
+        SCH::run_method(input_files, output_files, output_streams, prob_type);
 
         return 0;
         
