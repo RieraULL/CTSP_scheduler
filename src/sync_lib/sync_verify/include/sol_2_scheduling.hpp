@@ -15,7 +15,9 @@
 #include "sync_iterative_checker.hpp"
 #include "ctsp_lb_sync_checker.hpp"
 #include "sync_scheduling.hpp"
+#include "sync_infeasible.hpp"
 #include "sync_tw.hpp"
+#include "path_finder.hpp"
 
 using namespace std;
 
@@ -57,6 +59,7 @@ namespace SYNC_LIB
     protected:
         /// Synchronization constraint checker (uses ctsp_lb_sync_checker internally)
         sync_iterative_checker<ctsp_lb_sync_checker> checker_;
+        path_finder path_finder_;  ///< DFS-based violated cycle finder utility
 
         const size_t n_depots_;              ///< Number of depots in the problem
         const size_t n_customers_;           ///< Number of customers to serve
@@ -100,7 +103,7 @@ namespace SYNC_LIB
          * @return true if the solution satisfies all synchronization constraints
          * @return false if synchronization constraints are violated
          */
-        bool solve(const string &instance_name, const vector<double> &x, sync_scheduling &scheduling, sync_time_windows &time_windows);
+        bool solve(const string &instance_name, const vector<double> &x, sync_scheduling &scheduling, sync_infeasible &infeasible);
 
     protected:
         /**

@@ -24,6 +24,7 @@ add_library(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     sub::sync_model_a
     sub::sync_checker
+    sub::sync_path_finder
 )
 
 # Public include directory

@@ -21,6 +21,7 @@ add_library(${PROJECT_NAME}
     src/sync_operations.cpp       # Operations, arcs, subsets, and partitions
     src/sync_solution.cpp          # Solution representation (routes)
     src/sync_scheduling.cpp        # Scheduling with timing information
+    src/sync_infeasible.cpp
     src/sync_tw.cpp                # Time windows representation
     
     # Model builders

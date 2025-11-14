@@ -29,6 +29,7 @@ message(STATUS "USE_CLP=${USE_CLP}")
 set(SOURCES
     src/LP_solver.cpp
     src/model_description.cpp
+    src/graph.cpp
 )
 
 if (USE_CLP)

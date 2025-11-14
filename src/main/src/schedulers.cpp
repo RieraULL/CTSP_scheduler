@@ -1,7 +1,7 @@
 /**
  * @file schedulers.cpp
  * @brief Implementation of CTSP scheduling algorithms
- * 
+ *
  * Converts CTSP routing solutions into temporal schedules by:
  * 1. Building synchronization constraint model
  * 2. Converting solution format
@@ -11,6 +11,8 @@
  */
 
 #include "schedulers.hpp"
+
+#include "sync_infeasible.hpp"
 
 #include "sync_model_a_builder.hpp"
 #include "CTSP_model_a_builder.hpp"
@@ -26,14 +28,14 @@ namespace SCH
      * @param instance CTSP instance with customers, depots, and constraints
      * @param feas_sol Feasible routing solution
      * @param output_streams Output file stream for schedule
-     * 
+     *
      * Implementation steps:
      * 1. Build CTSP model_a from instance
      * 2. Create scheduling solver with tolerance 1e-6
      * 3. Convert sync_solution to model_a format
      * 4. Solve LP to compute operation times and time windows
      * 5. Write JSON schedule to output
-     * 
+     *
      * @note Asserts that solution is feasible (LP has solution)
      * @note Output format includes schedules per depot and time windows per customer
      */
@@ -46,26 +48,29 @@ namespace SCH
         SYNC_LIB::conTSP2_scheduling scheduler(model_builder, 1e-6);
 
         // Convert solution to model_a format
-        vector<double> model_a_feas_sol;
+        vector<double> x;
         {
             SYNC_LIB::model_a_solution_interface solution_interfaz;
             solution_interfaz.set(model_builder);
-            solution_interfaz.sync_solution_2_model_a(feas_sol, model_a_feas_sol);
+            solution_interfaz.sync_solution_2_model_a(feas_sol, x);
         }
 
         // Compute schedule and time windows via LP
-        SYNC_LIB::sync_scheduling s;
-        SYNC_LIB::sync_time_windows tw;
-        const bool feasible{scheduler.solve(feas_sol.get_instance_name(), model_a_feas_sol, s, tw)};
+        SYNC_LIB::sync_scheduling feasible_schedule;
+        SYNC_LIB::sync_infeasible infeasible_paths;
 
-        // Write schedule to JSON output
-        feas_sol.write_header(output_streams.sch_s);
-        output_streams.sch_s << endl;
-        s.write_json(output_streams.sch_s);
-        feas_sol.write_end(output_streams.sch_s);
+        const bool feasible{scheduler.solve(feas_sol.get_instance_name(), x, feasible_schedule, infeasible_paths)};
+
+        if (feasible)
+        {
+            // Write schedule to JSON output
+            feas_sol.write_header(output_streams.sch_s);
+            output_streams.sch_s << endl;
+            feasible_schedule.write_json(output_streams.sch_s);
+            feas_sol.write_end(output_streams.sch_s);
+        }
 
         // Verify solution feasibility
-        assert(feasible);
     }
 
     /**
@@ -79,7 +84,7 @@ namespace SCH
      * @param input_files Input file paths (instance, solution)
      * @param os_instance Output streams for schedule
      * @return 0 on success
-     * 
+     *
      * Workflow:
      * 1. Load CTSP instance from .contsp file
      * 2. Load solution from .sol file
@@ -111,13 +116,13 @@ namespace SCH
      * @param sch_instance Output streams
      * @param prob_type Problem type (CTSP1=0 or CTSP2=0)
      * @return 0 on success
-     * 
+     *
      * Uses function pointer array for efficient dispatching.
      * Currently only CTSP2 is implemented.
      */
     int run_method(const SCH::input_files &input_files,
-                              SCH::output_streams &sch_instance,
-                              SCH::problem_type prob_type)
+                   SCH::output_streams &sch_instance,
+                   SCH::problem_type prob_type)
     {
         return (*sch_method_array[static_cast<int>(prob_type)])(input_files, sch_instance);
     }

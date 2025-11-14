@@ -102,13 +102,17 @@ namespace SYNC_LIB
          * - Warm-starting subsequent solves
          * - Sensitivity analysis
          */
-        bool is_feasible(const vector<double> &x, vector<double> &s)
+        bool is_feasible(const vector<double> &x, vector<double> &s, vector<double> &alpha, vector<double> &beta, vector<double> &gamma)
         {
             const bool feasible{T::is_feasible_(x)};
 
             if (feasible)
             {
                 T::get_s(s);
+            }
+            else
+            {
+                T::get_alpha_beta_gamma(alpha, beta, gamma);
             }
 
             return feasible;

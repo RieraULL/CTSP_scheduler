@@ -13,8 +13,9 @@
 
 namespace SYNC_LIB
 {
-    conTSP2_scheduling::conTSP2_scheduling(const sync_model_a_builder &builder, double tol) 
+    conTSP2_scheduling::conTSP2_scheduling(const sync_model_a_builder &builder, double tol)
         : checker_(builder, tol),
+          path_finder_(builder),
           n_depots_(builder.get_n_depots()),
           n_customers_(builder.get_n_customers()),
           n_operations_(builder.get_n_operations()),
@@ -31,27 +32,34 @@ namespace SYNC_LIB
     {
     }
 
-    bool conTSP2_scheduling::solve(const string &instance_name, const vector<double> &x, 
-                                    sync_scheduling &scheduling, sync_time_windows &time_windows)
+    bool conTSP2_scheduling::solve(const string &instance_name, const vector<double> &x,
+                                   sync_scheduling &scheduling, sync_infeasible &infeasible)
     {
         // Set the instance name in the output
         scheduling.instance_name_ = instance_name;
-        
+        infeasible.instance_name_ = instance_name;
+
         // Initialize start time variables
         vector<double> s(n_operations_, 0.0);
-        
+
         // Verify synchronization constraints and compute start times
         // The checker solves an LP to find feasible start times if they exist
-        const bool is_feasible = checker_.is_feasible(x, s);
+        const bool is_feasible = checker_.is_feasible(x, s, infeasible.alpha(), infeasible.beta(), infeasible.gamma());
+        if (is_feasible)
+        {
+            // Normalize start times to begin from t=0
+            refine_solution_(s);
 
-        // Normalize start times to begin from t=0
-        refine_solution_(s);
-        
-        // Convert start times to depot schedules
-        var_2_schedule_(s, scheduling);
-        
-        // Compute customer time windows
-        var_2_time_windows_(s, time_windows);
+            // Convert start times to depot schedules
+            var_2_schedule_(s, scheduling);
+        }
+        else
+        {
+            vector<vector<int>> &cycles = infeasible.violated_cycles();
+
+            path_finder_.find_paths(infeasible.alpha(), infeasible.beta(), infeasible.gamma(), cycles);
+            cout << "Solution is infeasible in synchronization constraints." << endl;
+        }
 
         return is_feasible;
     }
@@ -75,7 +83,6 @@ namespace SYNC_LIB
         {
             s[i] -= s_min;
         }
-
     }
 
     void conTSP2_scheduling::var_2_schedule_(const vector<double> &s, sync_scheduling &scheduling)

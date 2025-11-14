@@ -85,7 +85,7 @@
             "args": [
                 "ctsp2",
                 "${workspaceFolder}/input/bayg29_p5_f90_lL.contsp",
-                "${workspaceFolder}/input/bayg29_p5_f90_lL.sol",
+                "${workspaceFolder}/input/bayg29_p5_f90_lL.infeas.sol",
                 "${workspaceFolder}/output/bayg29_p5_f90_lL.sched.json"
             ],
             "stopAtEntry": false,
