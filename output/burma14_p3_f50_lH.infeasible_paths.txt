@@ -1,0 +1,3 @@
+Infeasible paths detected in the solution:
+(c3_2_c14_2) (c14_2_c12_2) (c12_2_c5_2) (c5_2_c9_2) (c9_2_c9_1) (c9_1_c7_1) (c7_1_c12_1) (c12_1_c6_1) (c6_1_c5_1) (c5_1_c4_1) (c4_1_c3_1) (c3_1_c3_2) 
+

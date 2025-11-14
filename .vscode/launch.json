@@ -8,9 +8,9 @@
             "program": "${workspaceFolder}/build/bin/ctsp_scheduler",
             "args": [
                 "ctsp2",
-                "${workspaceFolder}/input/bayg29_p5_f90_lL.contsp",
-                "${workspaceFolder}/input/bayg29_p5_f90_lL.sol",
-                "${workspaceFolder}/output/bayg29_p5_f90_lL.sched.json"
+                "${workspaceFolder}/input//home/riera/ConsistentTSP_code_backup/Instances/SubramanyamGounaris/burma14_p3_f50_lH.contsp.contsp",
+                "${workspaceFolder}/input//home/riera/ConsistentTSP_code_backup/Instances/SubramanyamGounaris/burma14_p3_f50_lH.contsp.sol",
+                "${workspaceFolder}/output//home/riera/ConsistentTSP_code_backup/Instances/SubramanyamGounaris/burma14_p3_f50_lH.contsp.sched.json"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -46,9 +46,9 @@
             "program": "${workspaceFolder}/build-cplex/bin/ctsp_scheduler",
             "args": [
                 "ctsp2",
-                "${workspaceFolder}/input/bayg29_p5_f90_lL.contsp",
-                "${workspaceFolder}/input/bayg29_p5_f90_lL.sol",
-                "${workspaceFolder}/output/bayg29_p5_f90_lL.sched.json"
+                "${workspaceFolder}/input//home/riera/ConsistentTSP_code_backup/Instances/SubramanyamGounaris/burma14_p3_f50_lH.contsp.contsp",
+                "${workspaceFolder}/input//home/riera/ConsistentTSP_code_backup/Instances/SubramanyamGounaris/burma14_p3_f50_lH.contsp.sol",
+                "${workspaceFolder}/output//home/riera/ConsistentTSP_code_backup/Instances/SubramanyamGounaris/burma14_p3_f50_lH.contsp.sched.json"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -84,8 +84,8 @@
             "program": "${workspaceFolder}/build-clp/bin/ctsp_scheduler",
             "args": [
                 "ctsp2",
-                "${workspaceFolder}/input/bayg29_p5_f90_lL.contsp",
-                "${workspaceFolder}/input/bayg29_p5_f90_lL.infeas.sol",
+                "${workspaceFolder}/input/burma14_p3_f50_lH.contsp",
+                "${workspaceFolder}/input/burma14_p3_f50_lH.infeas.sol",
                 "${workspaceFolder}/output/"
             ],
             "stopAtEntry": false,

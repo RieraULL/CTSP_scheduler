@@ -1,0 +1,31 @@
+
+digraph G { 
+
+rankdir=LR; 
+overlap=false 
+ 
+ Op_1 ->  c9_1 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+ c3_1 ->  Om_1 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+ c4_1 ->  c3_1 [ fontsize="10pt" , label = " 1.00", color ="blue" , style ="solid"  ] 
+ c5_1 ->  c4_1 [ fontsize="10pt" , label = " 1.00", color ="blue" , style ="solid"  ] 
+ c6_1 ->  c5_1 [ fontsize="10pt" , label = " 1.00", color ="blue" , style ="solid"  ] 
+ c7_1 -> c12_1 [ fontsize="10pt" , label = " 1.00", color ="blue" , style ="solid"  ] 
+ c9_1 ->  c7_1 [ fontsize="10pt" , label = " 1.00", color ="blue" , style ="solid"  ] 
+c12_1 ->  c6_1 [ fontsize="10pt" , label = " 1.00", color ="blue" , style ="solid"  ] 
+ Op_2 ->  c8_2 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+ c3_2 -> c14_2 [ fontsize="10pt" , label = " 1.00", color ="blue" , style ="solid"  ] 
+ c5_2 ->  c9_2 [ fontsize="10pt" , label = " 1.00", color ="blue" , style ="solid"  ] 
+ c8_2 ->  c3_2 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+ c9_2 ->  Om_2 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+c12_2 ->  c5_2 [ fontsize="10pt" , label = " 1.00", color ="blue" , style ="solid"  ] 
+c14_2 -> c12_2 [ fontsize="10pt" , label = " 1.00", color ="blue" , style ="solid"  ] 
+ Op_3 -> c13_3 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+ c4_3 -> c14_3 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+ c5_3 ->  c4_3 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+ c6_3 ->  c5_3 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+ c7_3 ->  c6_3 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+c13_3 ->  c7_3 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+c14_3 ->  Om_3 [ fontsize="10pt", label = " 1.00", color ="gray", style ="solid"  ] 
+ c3_1 ->  c3_2 [ fontsize="10pt" , style ="solid" , color ="red" ]
+ c9_2 ->  c9_1 [ fontsize="10pt" , style ="solid" , color ="red" ]
+}

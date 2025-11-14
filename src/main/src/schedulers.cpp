@@ -76,8 +76,8 @@ namespace SCH
         }
         else
         {
-            std::ofstream infeasible_paths_file(output_files.output_path + "/" + output_files.instance_name + "_infeasible_paths.txt");
-            std::ofstream primal_dual_graph_file(output_files.output_path + "/" + output_files.instance_name + "_primal_dual_graph.dot");
+            std::ofstream infeasible_paths_file(output_files.output_path + "/" + output_files.instance_name + ".infeas_paths.txt");
+            std::ofstream primal_dual_graph_file(output_files.output_path + "/" + output_files.instance_name + ".graph.dot");
             infeasible_paths.write_infeasible_paths(infeasible_paths_file);
             infeasible_paths.write_primal_dual_graph(primal_dual_graph_file);
             infeasible_paths_file.close();
