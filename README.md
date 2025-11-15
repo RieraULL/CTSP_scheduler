@@ -1,4 +1,4 @@
-# CTSP Scheduler
+# CTSP-SEP
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![C++](https://img.shields.io/badge/C++-14-blue.svg)](https://isocpp.org/)
