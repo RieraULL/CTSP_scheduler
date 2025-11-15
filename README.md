@@ -449,8 +449,11 @@ If you use this software in your research, please cite:
 @software{ctsp_sep2025,
   author = {Riera-Ledesma, Jorge},
   title = {CTSP-SEP: Software to Generate Time-Consistency Inequalities for the CTSP with Idle Times},
+  version = {2.0.0},
   year = {2025},
-  url = {https://github.com/RieraULL/CTSP-SEP}
+  publisher = {Zenodo},
+  doi = {10.5281/zenodo.17616597},
+  url = {https://doi.org/10.5281/zenodo.17616597}
 }
 ```
 
