@@ -491,5 +491,5 @@ For questions, issues, or collaboration:
 ---
 
 **Last Updated:** November 2025  
-**Version:** 1.0.0  
+**Version:** 2.0.0  
 **Status:** Active Development
