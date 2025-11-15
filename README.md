@@ -1,40 +1,61 @@
-# CTSP-SEP
+# CTSP-SEP: Software to Generate Time-Consistency Inequalities for the CTSP with Idle Times
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![C++](https://img.shields.io/badge/C++-14-blue.svg)](https://isocpp.org/)
 [![CMake](https://img.shields.io/badge/CMake-3.10+-064F8C.svg)](https://cmake.org/)
 
-A comprehensive C++ framework to verify a feasible solution and to provide with a scheduling for the **Consistent Traveling Salesman Problems (CTSP)** (arrival time consistency). This project converts CTSP routing solutions into temporal schedules, ensuring that all consistency constraints between multiple depots are satisfied.
+**CTSP-SEP** is a software tool designed to demonstrate the core procedure for identifying temporal consistency constraints used in Riera-Ledesma et al. (2025) (Section 5). This procedure leverages the combinatorial structure underlying the dual problem associated with verifying whether a partial solution satisfies temporal consistency constraints. The software specifically implements the separation method for detecting violated cycles within partial solutions, which forms the foundation of path elimination constraints in branch-and-cut algorithms.
+
+The tool accepts a **partial solution** as input (though the working example uses an integer solution, it need not be integral). When the solution is temporally feasible, the program generates a feasible schedule returned in JSON format. When temporal consistency constraints are violated, the program produces:
+
+- A **graph in DOT format** identifying the arcs responsible for infeasibility
+- A **text file enumerating violated cycles** that can be used to generate cutting planes
+
+This implementation provides researchers with practical insight into the separation oracle described in Section 5 of our paper, demonstrating how dual-driven path elimination constraints are identified and strengthened in practice.
 
 ---
 
 > **💡 Why This Repository?**
 >
-> You might wonder: *Is all this code really necessary just to represent a schedule from a feasible solution?*
->
-> **Answer:** Obviously not. The purpose of this repository is to provide researchers with insight into how we implemented our model in:
+> This repository serves as a **practical implementation companion** to the research presented in:
 >
 > **Riera-Ledesma, J., Rodríguez-Martín, I., & Hernández-Pérez, H.** (2025)  
 > *Dual-driven path elimination for vehicle routing with idle times and arrival-time consistency*  
 > Computers & Operations Research, 107326  
 > [https://doi.org/10.1016/j.cor.2025.107326](https://doi.org/10.1016/j.cor.2025.107326)
 >
-> It also provides a mechanism to **generate cuts from infeasible solutions** (not necessarily integer), which is a key component of our branch-and-cut approach.
+> **Purpose:**
+>
+> - **Demonstrate the separation oracle** described in Section 5 of our paper
+> - **Identify violated cycles** in partial solutions through dual problem analysis
+> - **Generate path elimination cuts** from infeasible (possibly fractional) solutions
+> - **Visualize the combinatorial structure** of temporal consistency constraints
+>
+> While generating a schedule from a feasible solution could be done with simpler code, this tool reveals the **dual-driven separation mechanism** that powers our branch-and-cut approach. The graph and cycle outputs show researchers exactly how temporal consistency violations are detected and converted into valid cutting planes.
 
 ---
 
 ## Overview
 
-The **CTSP Scheduler** is a specialized tool designed to verify a solution for the Consistent Traveling Salesman Problem (CTSP), a variant of the classical TSP where:
+**CTSP-SEP** is a research tool that implements the **separation oracle** for temporal consistency constraints in vehicle routing problems with arrival-time consistency. The tool analyzes partial solutions (fractional or integer) and:
 
-- A depot serves a set of customers over multiple days
-- Customers must be visited at **consistent times** across days (arrival-time consistency constraints)
-- Each customer has specific service duration requirements
-- The goal is to generate feasible temporal schedules that satisfy all constraints
+### Core Functionality
 
-### Problem Definition and References
+1. **Constraint Verification via LP**: Solves the dual problem to check if a partial solution satisfies temporal consistency constraints
+2. **Violated Cycle Detection**: Identifies cycles in the dual graph that violate consistency requirements
+3. **Cut Generation**: Produces path elimination constraints from identified violations
+4. **Infeasibility Visualization**: Exports DOT graphs showing the combinatorial structure of violations
 
-The Consistent Traveling Salesman Problem is defined in the following research papers:
+### What This Project Provides
+
+- **Separation oracle implementation** following the dual-driven approach in Riera-Ledesma et al. (2025), Section 5
+- **Cycle enumeration** for generating valid inequalities in branch-and-cut frameworks
+- **Visual debugging** through graph exports that reveal the structure of temporal conflicts
+- **Working examples** with TSPLIB-extended instances demonstrating the separation process
+
+### Key References
+
+For problem definition and theoretical background, see:
 
 1. **Riera-Ledesma, J., Rodríguez-Martín, I., & Hernández-Pérez, H.** (2025)  
    *Dual-driven path elimination for vehicle routing with idle times and arrival-time consistency*  
@@ -51,15 +72,6 @@ The Consistent Traveling Salesman Problem is defined in the following research p
    Transportation Science, 52(2), 386-401  
    [https://doi.org/10.1287/trsc.2017.0741](https://doi.org/10.1287/trsc.2017.0741)
 
-
-
-### What This Project Provides
-
-1. **Instance management**: Parse TSPLIB-extended format with CTSP-specific constraints
-2. **Constraint verification**: Validate arrival-time consistency constraints via Linear Programming
-3. **Schedule generation**: Convert routing solutions into temporal schedules with time windows
-4. **JSON output**: Export schedules in a format ready for visualization and execution
-
 ## Features
 
 ✅ **Arrival-time consistency** - Verify and enforce temporal consistency across routes
@@ -74,54 +86,65 @@ The Consistent Traveling Salesman Problem is defined in the following research p
 ```text
 CTSP_scheduler/
 ├── .vscode/
-│   └── launch.json             # VS Code debug configurations (cplex/clp)
+│   ├── launch.json             # Debug configurations (cplex/clp variants)
+│   └── tasks.json              # Build tasks (configure/build/rebuild)
 │
 ├── docs/
-│   └── INSTALL.md              # Complete installation guide (CLP/CPLEX)
+│   └── INSTALL.md              # Installation guide (CLP/CPLEX setup)
 │
 ├── src/
-│   ├── main/                   # Main scheduler application
-│   │   ├── include/            # Headers (sch_io.hpp, schedulers.hpp)
-│   │   ├── src/                # Implementation (main.cpp, schedulers.cpp)
-│   │   └── README.md           # Detailed usage guide
+│   ├── main/                   # Separation oracle driver
+│   │   ├── include/            # CLI and I/O headers
+│   │   ├── src/                # main.cpp, solution parsing
+│   │   └── README.md           # Usage guide
 │   │
-│   ├── CTSP/                   # CTSP-specific components
-│   │   ├── IO/                 # Instance file parsing (TSPLIB extended)
-│   │   │   └── README.md       # TSPLIB format specification
-│   │   └── interface/          # Model builder adapters
-│   │       └── README.md       # CTSP model API
+│   ├── CTSP/
+│   │   ├── IO/                 # TSPLIB instance parser
+│   │   │   └── README.md       # Instance format specification
+│   │   └── interface/          # Model builder interface
+│   │       └── README.md       # API documentation
 │   │
-│   ├── sync_lib/               # Synchronization constraint library
-│   │   ├── sync_IO/            # Model I/O and solution representation
-│   │   │   └── README.md       # Data structures documentation
-│   │   ├── sync_checker/       # Constraint verification via LP
-│   │   │   └── README.md       # LP formulation details
-│   │   ├── sync_checker_solver/ # LP solver wrapper
-│   │   │   └── README.md       # Solver interface + CLP migration guide
-│   │   └── sync_verify/        # Solution-to-schedule converter
+│   ├── sync_lib/               # Temporal consistency separation library
+│   │   ├── sync_IO/            # Solution representation & model I/O
+│   │   │   └── README.md       # Data structures for solutions and models
+│   │   │
+│   │   ├── sync_checker/       # Dual LP formulation & solving
+│   │   │   └── README.md       # Constraint verification via dual problem
+│   │   │
+│   │   ├── sync_checker_solver/ # LP solver abstraction layer
+│   │   │   └── README.md       # Generic solver interface
+│   │   │
+│   │   ├── sync_path_finder/   # Violated cycle detection (separation oracle)
+│   │   │   └── README.md       # Algorithm description and usage
+│   │   │
+│   │   └── sync_verify/        # Schedule generation (feasible solutions)
 │   │       └── README.md       # Scheduling algorithm
 │   │
-│   └── util/                   # Utilities (matrix, LP solver interface)
+│   └── util/                   # Core utilities
 │       ├── include/
-│       │   ├── model_description.hpp  # Solver-agnostic model representation
 │       │   ├── LP_solver.hpp          # Abstract solver interface
-│       │   ├── matrix.hpp             # Generic matrix class
-│       │   ├── CLP/                   # CLP solver implementation
-│       │   │   ├── CLP_solver.hpp
-│       │   │   └── CLP_model_structure.hpp
-│       │   └── CPX/                   # CPLEX solver implementation
-│       │       ├── CPX_solver.hpp
-│       │       └── CPX_model_structure.hpp
-│       └── README.md           # Matrix class + CPLEX/CLP guide
+│       │   ├── model_description.hpp  # Solver-agnostic LP model
+│       │   ├── graph.hpp              # Graph utilities (DOT export)
+│       │   ├── matrix.hpp             # Matrix operations
+│       │   ├── CLP/                   # CLP backend implementation
+│       │   └── CPX/                   # CPLEX backend implementation
+│       └── README.md           # Utility documentation
 │
-├── input/                      # Example instance and solution files
-├── output/                     # Generated schedule files
+├── input/                      # Example instances & solutions
+│   ├── *.contsp                # CTSP instance files (TSPLIB extended)
+│   ├── *.sol                   # Routing solutions (feasible)
+│   └── *.infeas.sol            # Infeasible solutions (for cut demo)
 │
-├── build-cplex/                # CPLEX build directory (generated)
-├── build-clp/                  # CLP build directory (generated)
+├── output/                     # Generated outputs
+│   ├── *.sched.json            # Feasible schedules (JSON format)
+│   ├── *.graph.dot             # Violation graphs (DOT format)
+│   └── *.infeasible_paths.txt  # Enumerated violated cycles
+│
+├── build-cplex/                # CPLEX build artifacts (generated)
+├── build-clp/                  # CLP build artifacts (generated)
 │
 ├── CMakeLists.txt              # Root CMake configuration
-├── CMakePresets.json           # CMake presets (cplex/clp)
+├── CMakePresets.json           # Build presets (cplex/clp)
 └── README.md                   # This file
 ```
 
@@ -131,7 +154,10 @@ CTSP_scheduler/
 
 - **CMake** 3.10 or higher
 - **C++ compiler** with C++14 support (GCC 5+, Clang 3.4+, MSVC 2015+)
-- **LP Solver**: IBM ILOG CPLEX 22.1 (or CLP for open-source builds if you adapt the code)
+- **LP Solver** (choose one):
+  - **COIN-OR CLP** (open-source, recommended for academic use)
+  - **IBM ILOG CPLEX 22.1** (commercial, requires license)
+- **Graphviz** (optional, for visualizing DOT graphs generated from infeasible solutions)
 
 ### Build and Run (CMake Presets)
 
@@ -148,8 +174,11 @@ cmake --preset clp
 # Build (CLP)
 cmake --build --preset clp -j
 
-# Run (CLP)
-./build-clp/bin/ctsp_scheduler ctsp2 input/bayg29_p5_f90_lL.contsp input/bayg29_p5_f90_lL.sol output/schedule.json
+# Run with feasible solution (generates schedule JSON)
+./build-clp/bin/ctsp_scheduler ctsp2 input/burma14_p3_f50_lH.contsp input/burma14_p3_f50_lH.sol output/
+
+# Run with infeasible solution (generates DOT graph + violated cycles)
+./build-clp/bin/ctsp_scheduler ctsp2 input/burma14_p3_f50_lH.contsp input/burma14_p3_f50_lH.infeas.sol output/
 ```
 
 #### Option B: With CPLEX (Commercial)
@@ -165,11 +194,17 @@ cmake --preset cplex
 # Build (CPLEX)
 cmake --build --preset cplex -j
 
-# Run (CPLEX)
-./build-cplex/bin/ctsp_scheduler ctsp2 input/bayg29_p5_f90_lL.contsp input/bayg29_p5_f90_lL.sol output/schedule.json
+# Run with feasible solution (generates schedule JSON)
+./build-cplex/bin/ctsp_scheduler ctsp2 input/burma14_p3_f50_lH.contsp input/burma14_p3_f50_lH.sol output/
+
+# Run with infeasible solution (generates DOT graph + violated cycles)
+./build-cplex/bin/ctsp_scheduler ctsp2 input/burma14_p3_f50_lH.contsp input/burma14_p3_f50_lH.infeas.sol output/
 ```
 
-**Output:** A JSON file with temporal schedules for each depot and time windows for each customer.
+**Output:**
+
+- **Feasible solution**: JSON file with temporal schedules and time windows (`output/burma14_p3_f50_lH.sched.json`)
+- **Infeasible solution**: DOT graph (`output/burma14_p3_f50_lH.graph.dot`) + violated cycles list (`output/burma14_p3_f50_lH.infeasible_paths.txt`)
 
 > **Note**: For details on installing dependencies (CLP or CPLEX), see [docs/INSTALL.md](docs/INSTALL.md).
 
@@ -186,20 +221,30 @@ We include debug configurations in `.vscode/launch.json` to run `ctsp_scheduler`
 ### Command Line Interface
 
 ```bash
-./ctsp_scheduler <problem_type> <instance_file> <solution_file> <output_file>
+./ctsp_scheduler <problem_type> <instance_file> <solution_file> <output_dir>
 ```
 
 **Arguments:**
 
-- `problem_type`: Problem variant (`"ctsp2"` for multi-depot, `"ctsp1"` for single-depot) (**this version only supports ctsp1**)
+- `problem_type`: Problem variant (`"ctsp2"` for multi-depot, `"ctsp1"` for single-depot)
 - `instance_file`: Path to CTSP instance in extended TSPLIB format (`.contsp`)
-- `solution_file`: Path to feasible routing solution (`.sol`)
-- `output_file`: Path for output schedule file (`.sched.json`)
+- `solution_file`: Path to routing solution (`.sol`) — can be feasible or infeasible
+- `output_dir`: Output directory where results will be written
 
-### Example
+### CLI Examples
 
 ```bash
-./ctsp_scheduler ctsp2 instances/bayg29_p5.contsp solutions/bayg29_p5.sol output/schedule.json
+# Feasible solution → generates schedule JSON under output/
+# Using CLP:
+./build-clp/bin/ctsp_scheduler ctsp2 input/burma14_p3_f50_lH.contsp input/burma14_p3_f50_lH.sol output/
+# Using CPLEX:
+./build-cplex/bin/ctsp_scheduler ctsp2 input/burma14_p3_f50_lH.contsp input/burma14_p3_f50_lH.sol output/
+
+# Infeasible solution → generates DOT graph + violated cycles under output/
+# Using CLP:
+./build-clp/bin/ctsp_scheduler ctsp2 input/burma14_p3_f50_lH.contsp input/burma14_p3_f50_lH.infeas.sol output/
+# Using CPLEX:
+./build-cplex/bin/ctsp_scheduler ctsp2 input/burma14_p3_f50_lH.contsp input/burma14_p3_f50_lH.infeas.sol output/
 ```
 
 ## Architecture
@@ -208,50 +253,77 @@ We include debug configurations in `.vscode/launch.json` to run `ctsp_scheduler`
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│                    main (ctsp_scheduler)                     │
-│  Entry point, command-line parsing, workflow orchestration  │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-        ┌──────────────┼──────────────┬─────────────┐
-        │              │              │             │
-        ▼              ▼              ▼             ▼
-┌──────────────┐ ┌──────────┐ ┌──────────────┐ ┌─────────┐
-│  CTSP/IO     │ │ CTSP/    │ │  sync_lib    │ │  util   │
-│              │ │ interface│ │              │ │         │
-│ TSPLIB       │ │          │ │ sync_IO      │ │ matrix  │
-│ parser       │ │ Model    │ │ sync_checker │ │ LP      │
-│ Instance     │ │ builder  │ │ sync_verify  │ │ solver  │
-│ management   │ │ adapter  │ │ sync_checker_│ │         │
-│              │ │          │ │   _solver    │ │         │
-└──────────────┘ └──────────┘ └──────────────┘ └─────────┘
+│                 main (separation driver)                     │
+│  CLI, I/O, orchestration of separation/scheduling           │
+└───────────────┬───────────────────────────────┬─────────────┘
+      │                               │
+   ┌───────▼───────┐                 ┌──────▼──────┐
+   │   CTSP/IO     │                 │    util     │
+   │ TSPLIB parser │                 │ graph/matrix│
+   └───────┬───────┘                 └──────┬──────┘
+      │                                   │
+   ┌───────▼───────────────────────────────────▼────────┐
+   │                     sync_lib                        │
+   │  sync_IO | sync_checker | sync_checker_solver       │
+   │  sync_path_finder (separation oracle) | sync_verify │
+   └─────────────────────────────────────────────────────┘
 ```
 
 ### Data Flow
 
 ```text
-1. Load instance (.contsp)
+1. Load instance (.contsp) and solution (.sol)
           ↓
-2. Load solution (.sol)
+2. Build synchronization model and solve LP (dual check)
           ↓
-3. Build synchronization model
+3. Update support graph from active arcs (α, γ)
           ↓
-4. Convert solution format
+4. Detect violated cycles via DFS (path_finder)
           ↓
-5. Verify constraints via LP
+5a. If violations → export DOT graph + violated cycles list
+5b. Else → generate schedule JSON
           ↓
-6. Compute schedules & time windows
-          ↓
-7. Write JSON output (.sched.json)
+6. Write files under output/
 ```
+
+### Support Graph and Cycle Closure
+
+The separation oracle operates on a support graph built from the LP solution:
+
+- Vertices: depots + operations
+- Edges: routing arcs with alpha > tol; sync arcs with gamma > tol
+- For each active sync arc (i, j), enumerate simple paths i → j and close each path with the reverse sync arc (j, i) to form a cycle.
+
+```text
+Active arcs from LP
+   (routing: α>tol, sync: γ>tol)
+        
+   i  →  v1  →  v2  →  …  →  j     (simple path i→j)
+    \______________________________/
+                 |
+                 |  close cycle with reverse sync arc
+                 v
+                (j → i)
+
+Cycle (arcs) = [routing..., sync (j→i)]
+```
+
+Arc indexing in cycles:
+
+- Routing arcs: indices [0, n_routing_arcs)
+- Sync arcs: indices [n_routing_arcs, n_routing_arcs + n_sync_arcs)
 
 ### Key Abstractions
 
-- **`CTSP::instance`**: In-memory representation of CTSP problem
-- **`sync_solution`**: Routing solution with depot assignments and routes
-- **`sync_model_builder`**: Abstract interface for constraint model construction
-- **`sync_checker`**: LP-based constraint verification
-- **`conTSP2_scheduling`**: Schedule generator from feasible solutions
-- **`LP_solver`**: Abstract interface for linear programming solvers
+- **`SYNC_LIB::path_finder`**: DFS-based cycle detector (separation oracle)
+- **`sync_checker`**: Dual LP-based constraint verification
+- **`sync_checker_solver`**: Solver adapter (CLP/CPLEX)
+- **`sync_model_builder`**: Model construction and arc indexing/maps
+- **`GOMA::search_graph`**: Support graph and path enumeration utilities
+- **`LP_solver`**: Abstract solver interface
+- **`conTSP2_scheduling`**: Feasible schedule generator
+- **`CTSP::instance`**: CTSP problem representation
+- **`sync_solution`**: Routing solution representation
 
 ## Dependencies
 
@@ -262,20 +334,23 @@ We include debug configurations in `.vscode/launch.json` to run `ctsp_scheduler`
 
 ## Documentation
 
+See also: [Support Graph and Cycle Closure](#support-graph-and-cycle-closure).
+
 ### Module Documentation
 
 Each major component has detailed documentation:
 
 | Module | Description | Documentation |
 |--------|-------------|---------------|
-| **main** | Scheduler application | [src/main/README.md](src/main/README.md) |
+| **main** | Separation driver & CLI | [src/main/README.md](src/main/README.md) |
 | **CTSP/IO** | Instance file parsing | [src/CTSP/IO/README.md](src/CTSP/IO/README.md) |
 | **CTSP/interface** | Model builder API | [src/CTSP/interface/README.md](src/CTSP/interface/README.md) |
 | **sync_IO** | Solution representation | [src/sync_lib/sync_IO/README.md](src/sync_lib/sync_IO/README.md) |
-| **sync_checker** | Constraint verification | [src/sync_lib/sync_checker/README.md](src/sync_lib/sync_checker/README.md) |
-| **sync_checker_solver** | LP solver wrapper | [src/sync_lib/sync_checker_solver/README.md](src/sync_lib/sync_checker_solver/README.md) |
+| **sync_checker** | Dual LP constraint verification | [src/sync_lib/sync_checker/README.md](src/sync_lib/sync_checker/README.md) |
+| **sync_checker_solver** | LP solver wrapper (CLP/CPLEX) | [src/sync_lib/sync_checker_solver/README.md](src/sync_lib/sync_checker_solver/README.md) |
+| **sync_path_finder** | Violated cycle detection (separation oracle) | [src/sync_lib/sync_path_finder/README.md](src/sync_lib/sync_path_finder/README.md) |
 | **sync_verify** | Schedule generation | [src/sync_lib/sync_verify/README.md](src/sync_lib/sync_verify/README.md) |
-| **util** | Matrix & LP utilities | [src/util/README.md](src/util/README.md) |
+| **util** | Matrix, graph & LP utilities | [src/util/README.md](src/util/README.md) |
 
 ### API Documentation (Doxygen)
 
@@ -294,27 +369,54 @@ firefox docs/html/index.html
 
 ## Examples
 
-### Example 1: Basic Usage
+### Feasible Solution
 
 ```bash
-# Run on example instance
-./bin/ctsp_scheduler ctsp2 \
-  input/bayg29_p5_f90_lL.contsp \
-  input/bayg29_p5_f90_lL.sol \
-  output/schedule.json
+# Using CLP build
+./build-clp/bin/ctsp_scheduler ctsp2 \
+   input/burma14_p3_f50_lH.contsp \
+   input/burma14_p3_f50_lH.sol \
+   output/
+
+# Using CPLEX build
+./build-cplex/bin/ctsp_scheduler ctsp2 \
+   input/burma14_p3_f50_lH.contsp \
+   input/burma14_p3_f50_lH.sol \
+   output/
 ```
 
-**Input:**
+Outputs (under `output/`):
 
-- Instance: 29 nodes (27 customers + 2 depots), 5 days
-- Max time differential: 156 time units
-- Solution: Pre-computed feasible routes
+- `burma14_p3_f50_lH.sched.json` — Temporal schedules and time windows
 
-**Output:**
 
-- JSON file with schedules for both depots
-- Time windows for all 27 customers
-- Verification that arrival-time consistency constraints are satisfied
+### Infeasible Solution
+
+```bash
+# Using CLP build
+./build-clp/bin/ctsp_scheduler ctsp2 \
+   input/burma14_p3_f50_lH.contsp \
+   input/burma14_p3_f50_lH.infeas.sol \
+   output/
+
+# Using CPLEX build
+./build-cplex/bin/ctsp_scheduler ctsp2 \
+   input/burma14_p3_f50_lH.contsp \
+   input/burma14_p3_f50_lH.infeas.sol \
+   output/
+```
+
+Outputs (under `output/`):
+
+- `burma14_p3_f50_lH.graph.dot` — Violation graph (DOT)
+- `burma14_p3_f50_lH.infeasible_paths.txt` — Enumerated violated cycles
+
+
+Optional visualization with Graphviz:
+
+```bash
+dot -Tpdf output/burma14_p3_f50_lH.graph.dot -o output/burma14_p3_f50_lH.graph.pdf
+```
 
 ## License
 
@@ -344,11 +446,11 @@ Jorge Riera-Ledesma
 If you use this software in your research, please cite:
 
 ```bibtex
-@software{ctsp_scheduler2025,
+@software{ctsp_sep2025,
   author = {Riera-Ledesma, Jorge},
-  title = {CTSP Scheduler: A Framework for Consistent TSP Scheduling},
+  title = {CTSP-SEP: Software to Generate Time-Consistency Inequalities for the CTSP with Idle Times},
   year = {2025},
-  url = {https://github.com/RieraULL/CTSP_scheduler}
+  url = {https://github.com/RieraULL/CTSP-SEP}
 }
 ```
 
